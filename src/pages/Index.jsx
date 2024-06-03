@@ -19,8 +19,9 @@ const Index = () => {
       return;
     }
 
-    const correctedMessage = correctSpelling(input);
-    setMessages([...messages, { text: input, corrected: correctedMessage }]);
+    const correctedSpelling = correctSpelling(input);
+    const correctedGrammar = correctGrammar(correctedSpelling);
+    setMessages([...messages, { text: input, correctedSpelling, correctedGrammar }]);
     setInput("");
   };
 
@@ -40,6 +41,22 @@ const Index = () => {
       .join(" ");
   };
 
+  const correctGrammar = (text) => {
+    const corrections = {
+      "I is": "I am",
+      "you was": "you were",
+      "he don't": "he doesn't",
+    };
+
+    return text
+      .split(" ")
+      .map((word, index, arr) => {
+        const phrase = arr.slice(index, index + 2).join(" ");
+        return corrections[phrase.toLowerCase()] || word;
+      })
+      .join(" ");
+  };
+
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <VStack spacing={4} width="100%">
@@ -49,9 +66,13 @@ const Index = () => {
               <Text fontWeight="bold">You:</Text>
               <Text>{message.text}</Text>
               <Text fontWeight="bold" mt={2}>
-                Corrected:
+                Corrected Spelling:
               </Text>
-              <Text>{message.corrected}</Text>
+              <Text>{message.correctedSpelling}</Text>
+              <Text fontWeight="bold" mt={2}>
+                Corrected Grammar:
+              </Text>
+              <Text>{message.correctedGrammar}</Text>
             </Box>
           ))}
         </Box>
