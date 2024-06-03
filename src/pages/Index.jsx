@@ -48,13 +48,15 @@ const Index = () => {
       "he don't": "he doesn't",
     };
 
-    return text
-      .split(" ")
-      .map((word, index, arr) => {
-        const phrase = arr.slice(index, index + 2).join(" ");
-        return corrections[phrase.toLowerCase()] || word;
-      })
-      .join(" ");
+    const words = text.split(" ");
+    for (let i = 0; i < words.length - 1; i++) {
+      const phrase = `${words[i]} ${words[i + 1]}`;
+      if (corrections[phrase.toLowerCase()]) {
+        words[i] = corrections[phrase.toLowerCase()].split(" ")[0];
+        words[i + 1] = corrections[phrase.toLowerCase()].split(" ")[1];
+      }
+    }
+    return words.join(" ");
   };
 
   return (
